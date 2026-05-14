@@ -3,202 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium QR Designer</title>
-    <!-- Modern QR Library -->
+    <title>Pro QR Designer | 2026 Edition</title>
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
         :root {
-            --primary: #6366f1;
-            --bg: #f8fafc;
+            --accent: #6366f1;
+            --bg-page: #fdfdff;
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
         }
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-page);
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            color: #1e293b;
         }
-        .app-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        .container {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 380px auto;
             gap: 2rem;
-            max-width: 900px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            max-width: 1000px;
             width: 95%;
         }
-        .settings-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-        h2 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        label { font-size: 0.85rem; font-weight: 600; color: #64748b; }
-        input[type="text"], input[type="file"] {
-            padding: 10px;
+        .controls { display: flex; flex-direction: column; gap: 1.2rem; }
+        .control-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        label { font-weight: 700; font-size: 0.85rem; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select {
+            padding: 12px;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
-        .color-pickers {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .color-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f1f5f9;
-            padding: 5px 10px;
-            border-radius: 8px;
-        }
-        input[type="color"] {
-            border: none;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            background: none;
-        }
-        .preview-panel {
+        input:focus { outline: none; border-color: var(--accent); }
+        .color-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .preview-box {
+            background: #f8fafc;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #f1f5f9;
-            border-radius: 16px;
-            padding: 20px;
+            padding: 2rem;
+            border: 1px dashed #cbd5e1;
         }
-        #canvas {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
+        #canvas { padding: 15px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn {
-            background: var(--primary);
-            color: white;
+            padding: 14px;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
-            transition: opacity 0.2s;
+            transition: transform 0.1s, opacity 0.2s;
         }
-        .btn-download { background: #10b981; }
-        .btn:hover { opacity: 0.9; }
+        .btn-primary { background: var(--accent); color: white; grid-column: span 2; }
+        .btn-download { background: #0f172a; color: white; }
+        .btn-svg { background: #f1f5f9; color: #0f172a; }
+        .btn:active { transform: scale(0.98); }
 
-        @media (max-width: 768px) {
-            .app-container { grid-template-columns: 1fr; }
+        @media (max-width: 850px) {
+            .container { grid-template-columns: 1fr; padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="settings-panel">
-        <h2>QR Designer</h2>
+<div class="container">
+    <div class="controls">
+        <h2 style="margin: 0 0 0.5rem 0;">QR Designer</h2>
         
         <div class="control-group">
-            <label>Content URL</label>
-            <input type="text" id="qr-data" value="https://google.com" placeholder="https://...">
+            <label>Location / URL</label>
+            <input type="text" id="qr-data" value="https://google.com" placeholder="Paste link here...">
         </div>
 
-        <div class="color-pickers">
+        <div class="color-row">
             <div class="control-group">
-                <label>QR Color</label>
-                <div class="color-item">
-                    <input type="color" id="color-dots" value="#6366f1">
-                </div>
+                <label>Dots Color</label>
+                <input type="color" id="color-dots" value="#6366f1">
             </div>
             <div class="control-group">
                 <label>Background</label>
-                <div class="color-item">
-                    <input type="color" id="color-bg" value="#ffffff">
-                </div>
+                <input type="color" id="color-bg" value="#ffffff">
             </div>
-        </div>
-
-        <div class="control-group">
-            <label>Add Center Logo</label>
-            <input type="file" id="logo-file" accept="image/*">
         </div>
 
         <div class="control-group">
             <label>Dot Style</label>
-            <select id="dot-style" style="padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <option value="rounded">Rounded</option>
-                <option value="dots">Dots</option>
-                <option value="classy">Classy</option>
-                <option value="square" selected>Square</option>
-                <option value="extra-rounded">Extra Rounded</option>
+            <select id="dot-style">
+                <option value="rounded">Rounded Dots</option>
+                <option value="extra-rounded">Liquid Blocks</option>
+                <option value="classy">Classy (Diamond)</option>
+                <option value="dots">Circular Dots</option>
+                <option value="square" selected>Standard Square</option>
             </select>
         </div>
 
-        <button class="btn" onclick="updateQR()">Refresh Preview</button>
-        <button class="btn btn-download" onclick="downloadQR()">Download PNG</button>
+        <div class="control-group">
+            <label>Corner Eye Style</label>
+            <select id="eye-style">
+                <option value="extra-rounded">Organic Circle</option>
+                <option value="rounded">Soft Rounded</option>
+                <option value="square" selected>Classic Square</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Center Logo</label>
+            <input type="file" id="logo-file" accept="image/*">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="updateQR()">Refresh Designer</button>
+            <button class="btn btn-download" onclick="download('png')">Download PNG</button>
+            <button class="btn btn-svg" onclick="download('svg')">Export SVG</button>
+        </div>
     </div>
 
     <div class="preview-panel">
-        <div id="canvas"></div>
+        <div class="preview-box">
+            <div id="canvas"></div>
+            <p style="color: #94a3b8; font-size: 0.8rem; margin-top: 1.5rem; font-weight: 500;">LIVE PREVIEW</p>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
     const qrCode = new QRCodeStyling({
-        width: 300,
-        height: 300,
+        width: 320,
+        height: 320,
         type: "svg",
         data: "https://google.com",
         image: "",
-        dotsOptions: {
-            color: "#6366f1",
-            type: "square"
-        },
-        backgroundOptions: {
-            color: "#ffffff",
-        },
-        imageOptions: {
-            crossOrigin: "anonymous",
-            margin: 5
-        }
+        dotsOptions: { color: "#6366f1", type: "square" },
+        backgroundOptions: { color: "#ffffff" },
+        cornersSquareOptions: { type: "square" },
+        imageOptions: { crossOrigin: "anonymous", margin: 8 }
     });
 
-    const canvas = document.getElementById("canvas");
-    qrCode.append(canvas);
+    qrCode.append(document.getElementById("canvas"));
 
     function updateQR() {
-        const data = document.getElementById("qr-data").value;
-        const dotColor = document.getElementById("color-dots").value;
-        const bgColor = document.getElementById("color-bg").value;
-        const dotStyle = document.getElementById("dot-style").value;
         const fileInput = document.getElementById("logo-file");
-
         const options = {
-            data: data,
+            data: document.getElementById("qr-data").value,
             dotsOptions: {
-                color: dotColor,
-                type: dotStyle
+                color: document.getElementById("color-dots").value,
+                type: document.getElementById("dot-style").value
             },
             backgroundOptions: {
-                color: bgColor,
+                color: document.getElementById("color-bg").value,
+            },
+            cornersSquareOptions: {
+                type: document.getElementById("eye-style").value,
+                color: document.getElementById("color-dots").value // Keeps eyes matching dots
             }
         };
 
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 options.image = e.target.result;
                 qrCode.update(options);
             };
@@ -208,12 +179,12 @@
         }
     }
 
-    function downloadQR() {
-        qrCode.download({ name: "beautiful-qr", extension: "png" });
+    function download(ext) {
+        qrCode.download({ name: "designer-qr", extension: ext });
     }
 
-    // Auto-update on color or style changes
-    document.querySelectorAll('input, select').forEach(el => {
+    // Dynamic Updates
+    document.querySelectorAll('input:not([type="file"]), select').forEach(el => {
         el.addEventListener('change', updateQR);
     });
 </script>
